@@ -3,7 +3,6 @@
 ## 1. 프로젝트 개요
 터미널(리눅스 CLI), Docker, Git/GitHub를 직접 손으로 세팅하고 사용해 보며,
 재현 가능한 개발 환경을 만드는 미션입니다.
-(여기에 미션 목표를 내 말로 2~3줄 적기)
 
 ## 2. 실행 환경
 | 항목 | 내용 |
@@ -81,6 +80,375 @@
 | 저장소 연동 | `git clone`, `git remote -v` | origin 주소 확인 | [23](screenshots/23-git-clone-remote.png), [24](screenshots/24-vscode-repo-connected.png) |
 
 > 터미널 조작과 권한 실습의 명령어와 출력은 아래 "5. 터미널 조작 로그"에 기록했습니다.
+
+### 4-8. Docker 명령 실행 로그
+
+**설치 확인 (`docker --version`)**
+```bash
+(wymm01@DESKTOP-9LTHJF0:~/practice$ docker --version
+Docker version 29.9.2, build a82e528)
+```
+
+**엔진 동작 점검 (`docker info`)**
+```bash
+(wymm01@DESKTOP-9LTHJF0:~/practice$ docker info
+Client:
+ Version:    29.9.2
+ Context:    default
+ Debug Mode: false
+ Plugins:
+  agent: Docker AI Agent Runner (Docker Inc.)
+    Version:  v1.152.0
+    Path:     /usr/local/lib/docker/cli-plugins/docker-agent
+  ai: Docker AI Agent - Ask Gordon (Docker Inc.)
+    Version:  v1.33.0
+    Path:     /usr/local/lib/docker/cli-plugins/docker-ai
+  buildx: Docker Buildx (Docker Inc.)
+    Version:  v0.38.1
+    Path:     /usr/local/lib/docker/cli-plugins/docker-buildx
+  compose: Docker Compose (Docker Inc.)
+    Version:  v5.6.1
+    Path:     /usr/local/lib/docker/cli-plugins/docker-compose
+  debug: Get a shell into any image or container (Docker Inc.)
+    Version:  0.49.0
+    Path:     /usr/local/lib/docker/cli-plugins/docker-debug
+  desktop: Docker Desktop commands (Docker Inc.)
+    Version:  4.96.3
+    Path:     /usr/local/lib/docker/cli-plugins/docker-desktop
+  dhi: CLI for managing Docker Hardened Images (Docker Inc.)
+    Version:  v0.0.9
+    Path:     /usr/local/lib/docker/cli-plugins/docker-dhi
+  extension: Manages Docker extensions (Docker Inc.)
+    Version:  v0.2.32
+    Path:     /usr/local/lib/docker/cli-plugins/docker-extension
+  init: Creates Docker-related starter files for your project (Docker Inc.)
+    Version:  v1.4.1
+    Path:     /usr/local/lib/docker/cli-plugins/docker-init
+  mcp: Docker MCP Plugin (Docker Inc.)
+    Version:  v0.44.2
+    Path:     /usr/local/lib/docker/cli-plugins/docker-mcp
+  model: Docker Model Runner (Docker Inc.)
+    Version:  v1.2.9
+    Path:     /usr/local/lib/docker/cli-plugins/docker-model
+  offload: Docker Offload (Docker Inc.)
+    Version:  v0.7.19
+    Path:     /usr/local/lib/docker/cli-plugins/docker-offload
+  pass: Docker Pass Secrets Manager Plugin (beta) (Docker Inc.)
+    Version:  v0.3.2
+    Path:     /usr/local/lib/docker/cli-plugins/docker-pass
+  sandbox: "docker sandbox" is deprecated, use Docker Sandboxes instead (Docker Inc.)
+    Version:  v0.13.0
+    Path:     /usr/local/lib/docker/cli-plugins/docker-sandbox
+  scout: Docker Scout (Docker Inc.)
+    Version:  v1.27.0
+    Path:     /usr/local/lib/docker/cli-plugins/docker-scout
+
+Server:
+ Containers: 3
+  Running: 0
+  Paused: 0
+  Stopped: 3
+ Images: 2
+ Server Version: 29.9.2
+ Storage Driver: overlayfs
+  driver-type: io.containerd.snapshotter.v1
+ Logging Driver: local
+ Cgroup Driver: cgroupfs
+ Cgroup Version: 2
+ Plugins:
+  Volume: local
+  Network: bridge host ipvlan macvlan null overlay
+  Log: awslogs fluentd gcplogs gelf journald json-file local splunk syslog
+ CDI spec directories:
+  /etc/cdi
+  /var/run/cdi
+ Discovered Devices:
+  cdi: docker.com/gpu=webgpu
+ Swarm: inactive
+ Runtimes: io.containerd.runc.v2 nvidia runc
+ Default Runtime: runc
+ Init Binary: docker-init
+ containerd version: b7a25261e029d68978bbf290df0a62fc819b3c51
+ runc version: v1.5.2-0-g29dd3dc2
+ init version: de40ad0
+ Security Options:
+  seccomp
+   Profile: builtin
+  cgroupns
+ Kernel Version: 6.18.54.1-microsoft-standard-WSL2
+ Operating System: Docker Desktop
+ OSType: linux
+ Architecture: x86_64
+ CPUs: 8
+ Total Memory: 3.681GiB
+ Name: docker-desktop
+ ID: 38556747-0678-4710-99b5-127ac2be444a
+ Docker Root Dir: /var/lib/docker
+ Debug Mode: false
+ HTTP Proxy: http.docker.internal:3128
+ HTTPS Proxy: http.docker.internal:3128
+ No Proxy: hubproxy.docker.internal
+ Labels:
+  com.docker.desktop.address=unix:///var/run/docker-cli.sock
+ Experimental: false
+ Insecure Registries:
+  hubproxy.docker.internal:5555
+  127.0.0.0/8
+  ::1/128
+ Live Restore Enabled: false
+ Firewall Backend: iptables)
+```
+
+**이미지 받기와 목록 (`docker pull`, `docker images`)**
+```bash
+(wymm01@DESKTOP-9LTHJF0:~/practice$ docker pull hello-world
+Using default tag: latest
+latest: Pulling from library/hello-world
+Digest: sha256:c567b231f65614688711a75f31518a064258a51d442117a3e771a3a8fdba78ef
+Status: Downloaded newer image for hello-world:latest
+docker.io/library/hello-world:latest
+wymm01@DESKTOP-9LTHJF0:~/practice$ docker images
+                                                                                                    i Info →   U  In Use
+IMAGE                ID             DISK USAGE   CONTENT SIZE   EXTRA
+hello-world:latest   c567b231f656       25.9kB         9.49kB    U
+ubuntu:latest        c098726dd9b9        163MB         45.9MB    U)
+```
+
+**hello-world 실행과 컨테이너 목록 (`docker run`, `docker ps`, `docker ps -a`)**
+```bash
+(wymm01@DESKTOP-9LTHJF0:~/practice$ docker ps
+CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
+wymm01@DESKTOP-9LTHJF0:~/practice$ docker ps -a
+CONTAINER ID   IMAGE          COMMAND    CREATED              STATUS                          PORTS     NAMES
+37c238433050   hello-world    "/hello"   About a minute ago   Exited (0) About a minute ago             determined_villani
+6a29715c3495   ubuntu         "bash"     7 days ago           Exited (137) 7 days ago                   myubuntu
+b144a5bfb216   ubuntu         "bash"     7 days ago           Exited (0) 7 days ago                     determined_proskuriakova
+a3d897962f35   11a3eb1597e8   "/hello"   7 days ago           Exited (0) 7 days ago                     clever_pascal
+wymm01@DESKTOP-9LTHJF0:~/practice$ docker run -d --name my-nginx nginx
+Unable to find image 'nginx:latest' locally
+latest: Pulling from library/nginx
+a670537bed70: Pull complete
+6fc242d221a6: Pull complete
+d322f1bf41d8: Pull complete
+9f604dae09b2: Pull complete
+6e2ab1f3ef4e: Pull complete
+a071113ac575: Pull complete
+c139fe92686d: Pull complete
+05a7d8870b4b: Download complete
+ca81da665177: Download complete
+Digest: sha256:600f7cd45e27aa13e9304c834ab7c1b0ff39df85ee1dcc5087955455d77bc83b
+Status: Downloaded newer image for nginx:latest
+10a11dde4662aa1b61571cd02c9bef7a8ed5c96fd020d90212b00216d74a74f0
+)
+```
+
+**로그 확인 (`docker logs`)**
+```bash
+(wymm01@DESKTOP-9LTHJF0:~/practice$ docker logs my-nginx
+/docker-entrypoint.sh: /docker-entrypoint.d/ is not empty, will attempt to perform configuration
+/docker-entrypoint.sh: Looking for shell scripts in /docker-entrypoint.d/
+/docker-entrypoint.sh: Launching /docker-entrypoint.d/10-listen-on-ipv6-by-default.sh
+10-listen-on-ipv6-by-default.sh: info: Getting the checksum of /etc/nginx/conf.d/default.conf
+10-listen-on-ipv6-by-default.sh: info: Enabled listen on IPv6 in /etc/nginx/conf.d/default.conf
+/docker-entrypoint.sh: Sourcing /docker-entrypoint.d/15-local-resolvers.envsh
+/docker-entrypoint.sh: Launching /docker-entrypoint.d/20-envsubst-on-templates.sh
+/docker-entrypoint.sh: Launching /docker-entrypoint.d/30-tune-worker-processes.sh
+/docker-entrypoint.sh: Configuration complete; ready for start up
+2026/10/30 13:53:54 [notice] 1#1: using the "epoll" event method
+2026/10/30 13:53:54 [notice] 1#1: nginx/1.31.8
+2026/10/30 13:53:54 [notice] 1#1: built by gcc 14.2.0 (Debian 14.2.0-19)
+2026/10/30 13:53:54 [notice] 1#1: OS: Linux 6.18.54.1-microsoft-standard-WSL2
+2026/10/30 13:53:54 [notice] 1#1: getrlimit(RLIMIT_NOFILE): 1048576:1048576
+2026/10/30 13:53:54 [notice] 1#1: start worker processes
+2026/10/30 13:53:54 [notice] 1#1: start worker process 29
+2026/10/30 13:53:54 [notice] 1#1: start worker process 30
+2026/10/30 13:53:54 [notice] 1#1: start worker process 31
+2026/10/30 13:53:54 [notice] 1#1: start worker process 32
+2026/10/30 13:53:54 [notice] 1#1: start worker process 33
+2026/10/30 13:53:54 [notice] 1#1: start worker process 34
+2026/10/30 13:53:54 [notice] 1#1: start worker process 35
+2026/10/30 13:53:54 [notice] 1#1: start worker process 36
+)
+```
+
+**리소스 확인 (`docker stats`)**
+```bash
+(wymm01@DESKTOP-9LTHJF0:~/practice$ docker stats --no-stream
+CONTAINER ID   NAME       CPU %     MEM USAGE / LIMIT    MEM %     NET I/O         BLOCK I/O     PIDS
+10a11dde4662   my-nginx   0.00%     7.77MiB / 3.681GiB   0.21%     1.17kB / 126B   0B / 12.3kB   9
+)
+```
+
+**우분투 컨테이너 실행과 종료/유지 차이 (`docker run -it`, `docker exec`)**
+```bash
+(wymm01@DESKTOP-9LTHJF0:~/practice$ docker run -it --name my-ubuntu ubuntu
+root@1165e7187a5a:/# ls
+bin  boot  dev  etc  home  lib  lib64  media  mnt  opt  proc  root  run  sbin  srv  sys  tmp  usr  var
+root@1165e7187a5a:/# echo "hello from ubuntu container"
+hello from ubuntu container
+root@1165e7187a5a:/# exit
+exit
+)
+```
+```bash
+(wymm01@DESKTOP-9LTHJF0:~/practice$ docker exec -it my-nginx bash
+root@10a11dde4662:/# ls
+bin   dev                  docker-entrypoint.sh  home  lib64  mnt  proc  run   srv  tmp  var
+boot  docker-entrypoint.d  etc                   lib   media  opt  root  sbin  sys  usr
+root@10a11dde4662:/# exit
+exit
+)
+```
+
+**커스텀 이미지 빌드와 실행 (`docker build`, `docker run`)**
+```bash
+(wymm01@DESKTOP-9LTHJF0:~/my-web$ docker build -t my-custom-nginx .
+[+] Building 22.2s (7/7) FINISHED               docker:default
+ => [internal] load build definition from Dockerfile      0.5s
+ => => transferring dockerfile: 104B                      0.1s
+ => [internal] load metadata for docker.io/library/nginx  5.0s
+ => [internal] load .dockerignore                         0.4s
+ => => transferring context: 2B                           0.0s
+ => [internal] load build context                         0.7s
+ => => transferring context: 81B                          0.0s
+ => [1/2] FROM docker.io/library/nginx:alpine@sha256:785  8.8s
+ => => resolve docker.io/library/nginx:alpine@sha256:785  0.4s
+ => => sha256:9b0f7dfe35b2711a17f60dadd6 1.40kB / 1.40kB  0.4s
+ => => sha256:b9b388a21ecfde6ac80505f2 20.53MB / 20.53MB  4.0s
+ => => sha256:2ec5fb117ffa9a78b15fb6a787 1.21kB / 1.21kB  0.6s
+ => => sha256:26185d08a3ec318dd85a6c9f2172e7 404B / 404B  0.6s
+ => => sha256:7cc330898115ce55acccb0cc1e7dd0 964B / 964B  0.6s
+ => => sha256:657023555a2a19dc6036468198bb35 629B / 629B  0.5s
+ => => sha256:12b85cff06fd7d383d36a9c965 1.94MB / 1.94MB  1.2s
+ => => sha256:7b229517ed222597277036d948 3.85MB / 3.85MB  1.4s
+ => => extracting sha256:7b229517ed222597277036d94892173  0.6s
+ => => extracting sha256:12b85cff06fd7d383d36a9c96503fe0  0.5s
+ => => extracting sha256:657023555a2a19dc6036468198bb350  0.4s
+ => => extracting sha256:7cc330898115ce55acccb0cc1e7dd09  0.3s
+ => => extracting sha256:26185d08a3ec318dd85a6c9f2172e71  0.2s
+ => => extracting sha256:2ec5fb117ffa9a78b15fb6a78745ffc  0.2s
+ => => extracting sha256:9b0f7dfe35b2711a17f60dadd6d4035  0.2s
+ => => extracting sha256:b9b388a21ecfde6ac80505f23f52714  0.7s
+ => [2/2] COPY index.html /usr/share/nginx/html/index.ht  0.8s
+ => exporting to image                                    5.0s
+ => => exporting layers                                   1.1s
+ => => exporting manifest sha256:c9ac3c510cc5ec0839cb97a  0.2s
+ => => exporting config sha256:9cc9c8a94d5c289955b724da0  0.2s
+ => => exporting attestation manifest sha256:4935332e0f7  0.5s
+ => => exporting manifest list sha256:7fc62c7dc411a8c113  0.2s
+ => => naming to docker.io/library/my-custom-nginx:lates  0.0s
+ => => unpacking to docker.io/library/my-custom-nginx:la  2.4s
+wymm01@DESKTOP-9LTHJF0:~/my-web$ docker images
+                                           i Info →   U  In Use
+IMAGE          ID             DISK USAGE   CONTENT SIZE   EXTRA
+hello-world:latest
+               c567b231f656       25.9kB         9.49kB    U
+my-custom-nginx:latest
+               7fc62c7dc411       93.6MB         26.3MB
+nginx:latest   600f7cd45e27        243MB         66.8MB    U
+ubuntu:latest
+               c098726dd9b9        163MB         45.9MB    U
+)
+```
+```bash
+(wymm01@DESKTOP-9LTHJF0:~/my-web$ docker run -d --name my-custom-web my-custom-nginx
+0d652377ef94f355184a79edc3067644930b345222c024c13e70a0711215cfd6
+)
+```
+
+**포트 매핑 (`-p 8080:80`)**
+```bash
+(wymm01@DESKTOP-9LTHJF0:~/my-web$ docker rm -f my-custom-web
+my-custom-web
+wymm01@DESKTOP-9LTHJF0:~/my-web$ docker run -d --name my-custom-web -p 8080:80 my-custom-nginx
+d70e11854677b149dbc0bb44bb39ee1a2860c57c0fcc7a361c6c00a200301885
+wymm01@DESKTOP-9LTHJF0:~/my-web$ docker ps
+CONTAINER ID   IMAGE             COMMAND                  CREATED          STATUS          PORTS                                     NAMES
+d70e11854677   my-custom-nginx   "/docker-entrypoint.…"   17 seconds ago   Up 15 seconds   0.0.0.0:8080->80/tcp, [::]:8080->80/tcp   my-custom-web
+wymm01@DESKTOP-9LTHJF0:~/my-web$ curl http://localhost:8080
+<h1>Hello from my custom Docker image!</h1>
+)
+```
+
+**바인드 마운트 (변경 전/후)**
+```bash
+(wymm01@DESKTOP-9LTHJF0:~/my-web$ mkdir ~/bind-site
+wymm01@DESKTOP-9LTHJF0:~/my-web$ echo "<h1>Version 1 (before)</h1>" > ~/bind-site/index.html
+wymm01@DESKTOP-9LTHJF0:~/my-web$ cat ~/bind-site/index.html
+<h1>Version 1 (before)</h1>
+wymm01@DESKTOP-9LTHJF0:~/my-web$ docker run -d --name my-bind-web -p 8081:80 -v $HOME/bind-site:/usr/share/nginx/html nginx:alpine
+Unable to find image 'nginx:alpine' locally
+alpine: Pulling from library/nginx
+Digest: sha256:785835ea65db4bba6f021acc0f3be91b0fef76a53fe41f8588c6698d2aed0606
+Status: Downloaded newer image for nginx:alpine
+99c7986c86f62a1f6b3fa684a52038cd5aab8bc4a3a6a6b07ef26e0618816237
+wymm01@DESKTOP-9LTHJF0:~/my-web$ curl http://localhost:8081
+<h1>Version 1 (before)</h1>
+)
+```
+```bash
+(wymm01@DESKTOP-9LTHJF0:~/my-web$ echo "<h1>Version 2 (after)</h1>" > ~/bind-site/index.html
+wymm01@DESKTOP-9LTHJF0:~/my-web$ cat ~/bind-site/index.html
+<h1>Version 2 (after)</h1>
+wymm01@DESKTOP-9LTHJF0:~/my-web$ curl http://localhost:8081
+<h1>Version 2 (after)</h1>
+)
+```
+
+**Docker 볼륨 (컨테이너 삭제 전/후)**
+```bash
+(wymm01@DESKTOP-9LTHJF0:~/my-web$ docker volume create my-data
+my-data
+wymm01@DESKTOP-9LTHJF0:~/my-web$ docker volume ls
+DRIVER    VOLUME NAME
+local     my-data
+wymm01@DESKTOP-9LTHJF0:~/my-web$ docker run -d --name vol-test -v my-data:/data alpine sleep 3600
+Unable to find image 'alpine:latest' locally
+latest: Pulling from library/alpine
+7b229517ed22: Already exists
+3da1513d2124: Download complete
+3ec36f3670df: Download complete
+Digest: sha256:be2656061b536c1883c4034790e21d0a09c5aaaf51968b89368a3c0371ea2c9a
+Status: Downloaded newer image for alpine:latest
+271fa580ba61112872a6838820ca7ea63feebbe09b4fe0fa2be19abe5c14703c
+wymm01@DESKTOP-9LTHJF0:~/my-web$ docker exec vol-test sh -c "echo 'I survive container deletion' > /data/note.txt"
+wymm01@DESKTOP-9LTHJF0:~/my-web$ docker exec vol-test cat /data/note.txt
+I survive container deletion
+)
+```
+```bash
+(wymm01@DESKTOP-9LTHJF0:~/my-web$ docker rm -f vol-test
+vol-test
+wymm01@DESKTOP-9LTHJF0:~/my-web$ docker ps -a
+CONTAINER ID   IMAGE             COMMAND                  CREATED          STATUS                     PORTS                                     NAMES
+99c7986c86f6   nginx:alpine      "/docker-entrypoint.…"   16 minutes ago   Up 16 minutes              0.0.0.0:8081->80/tcp, [::]:8081->80/tcp   my-bind-web
+d70e11854677   my-custom-nginx   "/docker-entrypoint.…"   34 minutes ago   Up 34 minutes              0.0.0.0:8080->80/tcp, [::]:8080->80/tcp   my-custom-web
+1165e7187a5a   ubuntu            "/bin/bash"              21 hours ago     Exited (0) 21 hours ago                                              my-ubuntu
+10a11dde4662   nginx             "/docker-entrypoint.…"   21 hours ago     Exited (255) 2 hours ago   80/tcp                                    my-nginx
+37c238433050   hello-world       "/hello"                 21 hours ago     Exited (0) 21 hours ago                                              determined_villani
+6a29715c3495   ubuntu            "bash"                   8 days ago       Exited (137) 8 days ago                                              myubuntu
+b144a5bfb216   ubuntu            "bash"                   8 days ago       Exited (0) 8 days ago                                                determined_proskuriakova
+a3d897962f35   11a3eb1597e8      "/hello"                 8 days ago       Exited (0) 8 days ago                                                clever_pascal
+wymm01@DESKTOP-9LTHJF0:~/my-web$ docker volume ls
+DRIVER    VOLUME NAME
+local     my-data
+wymm01@DESKTOP-9LTHJF0:~/my-web$ docker run --rm -v my-data:/data alpine cat /data/note.txt
+I survive container deletion
+)
+```
+
+**Git 설정 (`git config --list`)**
+```bash
+(wymm01@DESKTOP-9LTHJF0:~/my-web$ git config --global user.name "
+wymm01"
+wymm01@DESKTOP-9LTHJF0:~/my-web$ git config --global user.email "wymm0110@naver.com"
+wymm01@DESKTOP-9LTHJF0:~/my-web$ git config --global init.defaultBranch main
+wymm01@DESKTOP-9LTHJF0:~/my-web$ git config --list
+user.name=wymm01
+user.email=wymm0110@naver.com
+init.defaultbranch=main
+)
+```
 
 ## 5. 터미널 조작 로그
 > 처음 시도할 때 남긴 로그는 [logs/first-attempt-log.md](logs/first-attempt-log.md)에 보관했습니다.
